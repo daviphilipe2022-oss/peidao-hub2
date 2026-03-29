@@ -1,0 +1,56 @@
+-- PeidaoHub - Infinite Jump, Aumentador de Velocidade e Andar sobre Águas (Executor Delta Mobile)
+local gui = {}
+gui.active = true
+gui.x = 10
+gui.y = 10
+local infiniteJump = false
+local velocidade = 1.0
+local andarSobreAguas = false
+
+function gui.draw()
+  drawText(gui.x, gui.y, "PeidaoHub", Color.GREEN)
+  drawText(gui.x, gui.y + 20, "1. Infinite Jump: " .. (infiniteJump and "Ativo" or "Desativado"))
+  drawText(gui.x, gui.y + 40, "2. Velocidade: " .. velocidade)
+  drawText(gui.x, gui.y + 60, "3. Andar sobre Águas: " .. (andarSobreAguas and "Ativo" or "Desativado"))
+  drawText(gui.x, gui.y + 80, "Toque no botão para ativar/desativar")
+end
+
+function onTouch(x, y)
+  if isPointInRect(x, y, gui.x, gui.y + 20, 200, 20) then
+    -- Infinite Jump
+    infiniteJump = not infiniteJump
+    if infiniteJump then
+      loop()
+    else
+      stopLoop()
+    end
+  elseif isPointInRect(x, y, gui.x, gui.y + 40, 200, 20) then
+    -- Velocidade
+    velocidade = velocidade + 0.1
+    setPlayerSpeed(velocidade)
+  elseif isPointInRect(x, y, gui.x, gui.y + 60, 200, 20) then
+    -- Andar sobre Águas
+    andarSobreAguas = not andarSobreAguas
+    if andarSobreAguas then
+      setPlayerCanWalkOnWater(true)
+    else
+      setPlayerCanWalkOnWater(false)
+    end
+  end
+end
+
+function loop()
+  if infiniteJump then
+    if isKeyDown("space") then
+      keyDown("space")
+      wait(0.01)
+      keyUp("space")
+    end
+    wait(0.01)
+  end
+end
+
+while true do
+  gui.draw()
+  wait(0.1)
+end
